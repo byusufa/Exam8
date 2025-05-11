@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <style>
+        .task-image {
+            max-width: 50%;   /* Rasmni jadvalga sig'dirish uchun maksimal kenglik */
+            max-height: 200px; /* Rasmni maksimal balandligini belgilash */
+            object-fit: cover; /* Rasmni to'liq katakka sig'dirish */
+            border-radius: 8px; /* Burchaklarni yumshatish */
+        }
+
+        td {
+            vertical-align: middle; /* Rasm va matnni vertikal ravishda moslashtirish */
+        }
+
+        .container {
+            overflow-x: auto; /* Katta jadval bo'lsa, skroll qo'shish */
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-end mb-3">
+        <form action="/main">
+            <button class="btn btn-outline-danger">← Back</button>
+        </form>
+    </div>
+    <table class="table table-sm">
+        <thead>
+        <tr>
+            <th>User photo</th>
+            <th>Full Name</th>
+            <th>Expired Tasks</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="userDto : ${userDtos}">
+            <td>
+                <img alt="Task Image" class="task-image" th:if="${userDto.attachmentId != null}"
+                     th:src="|/file/photo/${userDto.attachmentId}|" />
+            </td>
+            <td th:text="${userDto.fullName}"></td>
+            <td th:text="${userDto.countTask}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
+
+</body>
+</html>
