@@ -222,7 +222,7 @@ public class PageController {
     public String creminalTask(Model model) {
         List<UserDto> userDtos = userRepository.findAllUsersExpiredDeadline();
         model.addAttribute("userDtos", userDtos);
-        return "creminal";
+        return "criminal";
     }
 
     @GetMapping("/task/report")
