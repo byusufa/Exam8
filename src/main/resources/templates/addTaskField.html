@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Task Field</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+<div class="container mt-5">
+    <div class="d-flex justify-content-end mb-3">
+        <form action="/task/back">
+            <button class="btn btn-outline-danger">← Back</button>
+        </form>
+    </div>
+    <h2 class="mb-4 text-center">Task Management</h2>
+    <div class="row">
+        <!-- Left Column: Comments Section -->
+        <div class="col-md-6">
+            <div class="comments-section border p-4 rounded shadow-sm bg-light">
+                <h3 class="mb-4">Comments</h3>
+                <!-- Add New Comment -->
+                <form action="/task/addComment" method="post" class="mb-4">
+                    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                    <input type="hidden" name="taskId" th:value="${taskId}">
+                    <div class="input-group mb-3">
+                        <input type="text" name="comment" class="form-control" placeholder="Enter your comment..."
+                               maxlength="250" required>
+                        <button class="btn btn-primary" type="submit">Add Comment</button>
+                    </div>
+                </form>
+
+                <div th:each="comment : ${comments}">
+                    <div class="comment border-bottom pb-2 mb-3">
+                        <p class="mb-0" th:text="${comment.content}">Comment text here...</p>
+                        <p class="mb-1">
+                            <strong th:text="${comment.user.fullName()}">User Name</strong>
+                            <span class="text-muted small" th:text="${comment.date}">Date</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <form action="/task/addField" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                <input type="hidden" name="taskId" th:value="${taskId}">
+
+
+                <div class="mb-3">
+                    <label for="description" class="form-label">Task Description</label>
+                    <input type="text" id="description" name="description" class="form-control"
+                           placeholder="Enter task description">
+                </div>
+
+
+                <div class="mb-3">
+                    <label for="file" class="form-label">Upload File</label>
+                    <input type="file" id="file" name="file" class="form-control">
+                </div>
+
+                <div class="mb-3">
+                    <label for="date" class="form-label">Task Date</label>
+                    <input type="date" id="date" name="deadline" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-success w-100">Save Task</button>
+            </form>
+            <br class="btn btn-dark">
+            <div class="border p-3 rounded shadow-sm bg-light">
+                <h4 class="mb-3">Assign Users</h4>
+                <form action="/task/addUser" method="post" class="mb-3">
+                    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                    <input type="hidden" name="taskId" th:value="${taskId}">
+                    <div class="mb-3">
+                        <select id="userSelect" name="userId" class="form-select" onchange="this.form.submit()">
+                            <option value="" selected>All</option>
+                            <option th:each="user : ${users}" th:text="${user.fullName()}"
+                                    th:value="${user.id}"></option>
+                        </select>
+                    </div>
+                </form>
+
+                <form action="/user/remove" method="get">
+                    <input type="hidden" name="taskId" th:value="${taskId}">
+                    <ul class="list-unstyled">
+                        <li th:each="user : ${assignedUsers}">
+                            <input type="hidden" name="userId" th:value="${user.id}">
+                            <span th:text="${user.fullName()}"></span>
+                            <button type="submit"
+                                    class="btn btn-danger btn-sm"
+                                    th:formaction="@{'/user/remove?userId=' + ${user.id} + '&taskId=' + ${taskId}}">
+                                x
+                            </button>
+                        </li>
+                    </ul>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+
+
+</html>
+
+
